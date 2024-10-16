@@ -1,4 +1,4 @@
-package com.example.tp4.api
+package com.example.tp4.model.post.retrofit
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

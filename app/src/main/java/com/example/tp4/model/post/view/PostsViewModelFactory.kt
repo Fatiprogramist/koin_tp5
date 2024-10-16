@@ -1,8 +1,9 @@
-package com.example.tp4.viewmodel
+package com.example.tp4.model.post.view
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.tp4.repository.PostRepository
+import com.example.tp4.model.post.room.PostRepository
+
 
 class PostsViewModelFactory(private val repository: PostRepository) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {

@@ -1,12 +1,14 @@
-package com.example.tp4.repository
+package com.example.tp4.model.post.room
 
 import androidx.lifecycle.LiveData
-import com.example.tp4.database.PostDao
 import com.example.tp4.model.post.Post
+import javax.inject.Inject
 
-class PostRepository(private val postDao: PostDao) {
+class PostRepository @Inject constructor(private val postDao: PostDao) {
 
-    val allPosts: LiveData<List<Post>> = postDao.getAllPosts()
+    fun getPosts(): LiveData<List<Post>> {
+        return postDao.getAllPosts()
+    }
 
     suspend fun insert(post: Post) {
         postDao.insertPost(post)

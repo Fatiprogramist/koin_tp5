@@ -1,4 +1,4 @@
-package com.example.tp4.database
+package com.example.tp4.model.post.room
 
 import android.content.Context
 import androidx.room.Room
