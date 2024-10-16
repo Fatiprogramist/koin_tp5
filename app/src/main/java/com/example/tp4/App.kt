@@ -7,7 +7,7 @@ import com.example.tp4.model.post.retrofit.DaggerAppComponent
 
 
 class App : Application() {
-    lateinit var appComponent: AppComponent
+    lateinit var appComponent: AppComp onent
 
     override fun onCreate() {
         super.onCreate()
