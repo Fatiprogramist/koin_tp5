@@ -1,28 +1,24 @@
-package com.example.tp4.model.post.room
+package com.example.tp4.model.post
 
 import androidx.lifecycle.LiveData
-import com.example.tp4.model.post.Post
+import com.example.tp4.model.post.room.PostDao
 import javax.inject.Inject
 
 class PostRepository @Inject constructor(private val postDao: PostDao) {
 
-    fun getPosts(): LiveData<List<Post>> {
-        return postDao.getAllPosts()
-    }
+    val allPosts: LiveData<List<Post>> = postDao.getAllPosts() // Ensure LiveData is fetched here
 
+    // Insert a single post
     suspend fun insert(post: Post) {
-        postDao.insertPost(post)
+        postDao.insertPost(post) // Ensure this is a suspend function in your DAO
     }
 
-    suspend fun update(post: Post) {
-        postDao.updatePost(post)
-    }
-
-    suspend fun delete(post: Post) {
-        postDao.deletePost(post)
+    // Optional: Insert multiple posts at once
+    suspend fun insert(posts: List<Post>) {
+        postDao.insertPosts(posts) // Ensure this is a suspend function in your DAO
     }
 
     suspend fun deleteAll() {
-        postDao.deleteAllPosts()
+        postDao.deleteAllPosts() // Ensure this is a suspend function in your DAO
     }
 }

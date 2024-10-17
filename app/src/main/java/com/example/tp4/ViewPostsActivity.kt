@@ -1,5 +1,6 @@
 package com.example.tp4
 
+import PostRepository
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -7,8 +8,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tp4.adapter.PostsAdapter
-import com.example.tp4.model.post.room.DatabaseClient
-import com.example.tp4.model.post.room.PostRepository
 import com.example.tp4.model.post.view.PostsViewModel
 import com.example.tp4.model.post.view.PostsViewModelFactory
 

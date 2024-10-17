@@ -3,18 +3,24 @@ package com.example.tp4
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.tp4.model.post.retrofit.ApiService
 import com.example.tp4.model.post.Post
+import com.example.tp4.model.post.view.PostsViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var apiService: ApiService
+
+    private val postsViewModel: PostsViewModel by viewModels()
 
     private lateinit var textView: TextView
     private lateinit var btnFetchData: Button
@@ -22,7 +28,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (application as App).appComponent.inject(this)
         setContentView(R.layout.activity_main)
 
         textView = findViewById(R.id.textView)
@@ -30,25 +35,19 @@ class MainActivity : AppCompatActivity() {
         btnViewData = findViewById(R.id.btnViewData)
 
         btnFetchData.setOnClickListener {
-           // savePost()
             fetchPosts()
         }
 
         btnViewData.setOnClickListener {
-           // navigateToPostsActivity()
+            observePosts()
         }
     }
 
     private fun fetchPosts() {
-        val call = apiService.getPosts()
-        call.enqueue(object : Callback<List<Post>> {
+        apiService.getPosts().enqueue(object : Callback<List<Post>> {
             override fun onResponse(call: Call<List<Post>>, response: Response<List<Post>>) {
-                if (response.isSuccessful) {
-                    val posts = response.body()
-                    if (posts != null) {
-                        //savePostsToDatabase(posts)
-                        displayPosts(posts)
-                    }
+                response.body()?.let { posts ->
+                    postsViewModel.insertPosts(posts)
                 }
             }
 
@@ -58,13 +57,13 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    private fun displayPosts(posts: List<Post>) {
-        val postData = StringBuilder()
-        posts.forEach { post ->
-            postData.append("ID: ${post.id}\n")
-            postData.append("Title: ${post.title}\n")
-            postData.append("Body: ${post.body}\n\n")
+    private fun observePosts() {
+        postsViewModel.allPosts.observe(this) { posts ->
+            val postData = posts.joinToString("\n\n") {
+                "ID: ${it.id}\nTitle: ${it.title}\nContent: ${it.content}"
+            }
+            textView.text = postData
         }
-        textView.text = postData.toString()
     }
 }
+

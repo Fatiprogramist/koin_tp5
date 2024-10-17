@@ -4,19 +4,29 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tp4.model.post.Post
-import com.example.tp4.model.post.room.PostRepository
+import com.example.tp4.model.post.PostRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.launch
 
-class PostsViewModel(private val repository: PostRepository) : ViewModel() {
+@HiltViewModel
+class PostsViewModel @Inject constructor(
+    private val repository: PostRepository
+) : ViewModel() {
 
-    // LiveData for observing posts
-    val allPosts: LiveData<List<Post>> = repository.getPosts()
+    val allPosts: LiveData<List<Post>> = repository.allPosts
 
-    // Function to delete all posts
-    fun deleteAllPosts() {
+    fun insertPosts(posts: List<Post>) {
         viewModelScope.launch {
-            repository.deleteAll()// Implement this method in your repository
+            posts.forEach { post ->
+                repository.insert(post)
+            }
         }
     }
 
+    fun deleteAllPosts() {
+        viewModelScope.launch {
+            repository.deleteAll()
+        }
+    }
 }
