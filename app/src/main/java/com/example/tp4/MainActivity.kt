@@ -47,6 +47,7 @@ class MainActivity : AppCompatActivity() {
         apiService.getPosts().enqueue(object : Callback<List<Post>> {
             override fun onResponse(call: Call<List<Post>>, response: Response<List<Post>>) {
                 response.body()?.let { posts ->
+                    postsViewModel.deleteAllPosts()
                     postsViewModel.insertPosts(posts)
                 }
             }
@@ -60,7 +61,7 @@ class MainActivity : AppCompatActivity() {
     private fun observePosts() {
         postsViewModel.allPosts.observe(this) { posts ->
             val postData = posts.joinToString("\n\n") {
-                "ID: ${it.id}\nTitle: ${it.title}\nContent: ${it.content}"
+                "ID: ${it.id}\nTitle: ${it.title}\nContent: ${it.body}"
             }
             textView.text = postData
         }
