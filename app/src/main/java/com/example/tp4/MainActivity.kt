@@ -1,14 +1,18 @@
 package com.example.tp4
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import com.example.tp4.model.post.retrofit.ApiService
 import com.example.tp4.model.post.Post
+import com.example.tp4.model.post.retrofit.ApiService
 import com.example.tp4.model.post.view.PostsViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -39,16 +43,20 @@ class MainActivity : AppCompatActivity() {
         }
 
         btnViewData.setOnClickListener {
-            observePosts()
+            navigateToPostsActivity()
         }
     }
 
     private fun fetchPosts() {
-        apiService.getPosts().enqueue(object : Callback<List<Post>> {
+        val call = apiService.getPosts()
+        call.enqueue(object : Callback<List<Post>> {
             override fun onResponse(call: Call<List<Post>>, response: Response<List<Post>>) {
-                response.body()?.let { posts ->
-                    postsViewModel.deleteAllPosts()
-                    postsViewModel.insertPosts(posts)
+                if (response.isSuccessful) {
+                    val posts = response.body()
+                    if (posts != null) {
+                        savePostsToDatabase(posts)
+                        displayPosts(posts)
+                    }
                 }
             }
 
@@ -58,13 +66,25 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    private fun observePosts() {
-        postsViewModel.allPosts.observe(this) { posts ->
-            val postData = posts.joinToString("\n\n") {
-                "ID: ${it.id}\nTitle: ${it.title}\nContent: ${it.body}"
-            }
-            textView.text = postData
+    private fun savePostsToDatabase(posts: List<Post>) {
+        CoroutineScope(Dispatchers.IO).launch {
+            postsViewModel.deleteAllPosts()
+            postsViewModel.insertPosts(posts)
         }
     }
-}
 
+    private fun displayPosts(posts: List<Post>) {
+        val postData = StringBuilder()
+        posts.forEach { post ->
+            postData.append("ID: ${post.id}\n")
+            postData.append("Title: ${post.title}\n")
+            postData.append("Body: ${post.body}\n\n")
+        }
+        textView.text = postData.toString()
+    }
+
+    private fun navigateToPostsActivity() {
+        val intent = Intent(this, ViewPostsActivity::class.java)
+        startActivity(intent)
+    }
+}

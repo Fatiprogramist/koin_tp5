@@ -6,25 +6,25 @@ import com.example.tp4.model.post.Post
 
 @Dao
 interface PostDao {
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertPost(post: Post)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertPost(post: Post) // Utilisez suspend pour les opérations longues
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertPosts(posts: List<Post>) // Utilisez suspend pour les opérations longues
+    fun insertPosts(posts: List<Post>)
 
     @Query("SELECT * FROM posts")
-    fun getAllPosts(): LiveData<List<Post>> // LiveData pour observer les changements
+    fun getAllPosts(): LiveData<List<Post>>
 
     @Query("SELECT * FROM posts WHERE id = :postId")
-    fun getPostById(postId: Int): Post? // Retournez Post? pour les résultats potentiellement null
+    fun getPostById(postId: Int): Post?
 
     @Update
-    fun updatePost(post: Post) // Utilisez suspend pour les opérations longues
+    fun updatePost(post: Post)
 
     @Delete
-   fun deletePost(post: Post) // Utilisez suspend pour les opérations longues
+    fun deletePost(post: Post)
 
     @Query("DELETE FROM posts")
-    fun deleteAllPosts() // Utilisez suspend pour les opérations longues
+    fun deleteAllPosts()
+
 }
