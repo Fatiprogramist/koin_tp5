@@ -28,7 +28,9 @@ class ViewPostsActivity : AppCompatActivity() {
 
         // Observe the posts LiveData
         postsViewModel.allPosts.observe(this) { posts ->
-            postsAdapter.setPosts(posts)
+            posts?.let {
+                postsAdapter.setPosts(it) // Update the adapter with new data
+            }
         }
     }
 }
