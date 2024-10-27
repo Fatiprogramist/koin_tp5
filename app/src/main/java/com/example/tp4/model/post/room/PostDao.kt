@@ -15,8 +15,9 @@ interface PostDao {
     @Query("SELECT * FROM posts")
     fun getAllPosts(): LiveData<List<Post>>
 
+    // Ensure this method returns a nullable Post
     @Query("SELECT * FROM posts WHERE id = :postId")
-    fun getPostById(postId: Int): Post?
+    fun getPostById(postId: Int): Post?  // Changed to return Post?
 
     @Update
     fun updatePost(post: Post)
@@ -26,5 +27,4 @@ interface PostDao {
 
     @Query("DELETE FROM posts")
     fun deleteAllPosts()
-
 }

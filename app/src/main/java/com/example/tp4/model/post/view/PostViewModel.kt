@@ -6,8 +6,9 @@ import androidx.lifecycle.viewModelScope
 import com.example.tp4.model.post.Post
 import com.example.tp4.model.post.room.PostDao
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
 class PostsViewModel @Inject constructor(
@@ -17,15 +18,13 @@ class PostsViewModel @Inject constructor(
     val allPosts: LiveData<List<Post>> = postDao.getAllPosts()
 
     fun insertPosts(posts: List<Post>) {
-        viewModelScope.launch {
-            posts.forEach { post ->
-                postDao.insertPost(post)
-            }
+        viewModelScope.launch(Dispatchers.IO) {
+            postDao.insertPosts(posts)
         }
     }
 
     fun deleteAllPosts() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             postDao.deleteAllPosts()
         }
     }
