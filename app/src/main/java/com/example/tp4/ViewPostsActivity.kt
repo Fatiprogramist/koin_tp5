@@ -1,18 +1,17 @@
 package com.example.tp4
 
 import android.os.Bundle
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tp4.adapter.PostsAdapter
 import com.example.tp4.model.post.view.PostsViewModel
-import dagger.hilt.android.AndroidEntryPoint
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-@AndroidEntryPoint
 class ViewPostsActivity : AppCompatActivity() {
 
-    private val postsViewModel: PostsViewModel by viewModels()
+    private val postsViewModel: PostsViewModel by viewModel()
     private lateinit var postsAdapter: PostsAdapter
     private lateinit var recyclerView: RecyclerView
 
@@ -27,10 +26,9 @@ class ViewPostsActivity : AppCompatActivity() {
         recyclerView.adapter = postsAdapter
 
         // Observe the posts LiveData
-        postsViewModel.allPosts.observe(this) { posts ->
-            posts?.let {
-                postsAdapter.setPosts(it) // Update the adapter with new data
-            }
-        }
+        postsViewModel.allPosts.observe(this, Observer { posts ->
+            // Update the adapter with the list of posts
+            postsAdapter.setPosts(posts)
+        })
     }
 }

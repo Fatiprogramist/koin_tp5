@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     kotlin("kapt")
-    id("com.google.dagger.hilt.android")
+
 }
 
 android {
@@ -57,10 +57,16 @@ dependencies {
     implementation ("androidx.room:room-runtime: 2.5.0")
     kapt ("androidx.room:room-compiler:2.5.0")
     implementation ("androidx.room:room-ktx:2.5.0")
-    implementation ("com.google.dagger:dagger:2.52")
-    kapt ("com.google.dagger:dagger-compiler:2.52")
-    implementation("com.google.dagger:hilt-android:2.51.1")
-    kapt("com.google.dagger:hilt-android-compiler:2.51.1")
+
+    // Koin core for Android
+    implementation ("io.insert-koin:koin-android:3.4.0")
+
+    // Koin for ViewModel (integrated within koin-android from v3.4.0)
+    implementation ("io.insert-koin:koin-androidx-navigation:3.4.0" )// Optional, if using Koin with Jetpack Navigation
+
+    // Koin for Jetpack Compose (optional, if using Compose)
+    implementation ("io.insert-koin:koin-androidx-compose:3.4.0")
+
 }
 kapt {
     correctErrorTypes = true

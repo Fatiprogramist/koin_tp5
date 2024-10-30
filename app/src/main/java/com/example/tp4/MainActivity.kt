@@ -8,23 +8,22 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.tp4.model.post.Post
 import com.example.tp4.model.post.retrofit.ApiService
-import com.example.tp4.model.post.view.PostsViewModel
-import dagger.hilt.android.AndroidEntryPoint
+//import com.example.tp4.model.post.view.PostsViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import javax.inject.Inject
+import com.example.tp4.model.post.view.PostsViewModel
 
-@AndroidEntryPoint
+
 class MainActivity : AppCompatActivity() {
 
-    @Inject
-    lateinit var apiService: ApiService
-
-    private val postsViewModel: PostsViewModel by viewModels()
+    private val apiService: ApiService by inject()
+    private val postsViewModel: PostsViewModel by inject()
 
     private lateinit var textView: TextView
     private lateinit var btnFetchData: Button
@@ -83,8 +82,9 @@ class MainActivity : AppCompatActivity() {
         textView.text = postData.toString()
     }
 
-    private fun navigateToPostsActivity() {
-        val intent = Intent(this, ViewPostsActivity::class.java)
-        startActivity(intent)
-    }
+     private fun navigateToPostsActivity() {
+         val intent = Intent(this, ViewPostsActivity::class.java)
+         startActivity(intent)
+     }
 }
+
